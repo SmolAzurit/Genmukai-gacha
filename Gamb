@@ -287,7 +287,7 @@
     const commonWords = [
       { word: "Silly", img: "images2/silly.png" },
       { word: "Stinky", img: "images2/stinky.jpg" },
-      { word: "Tax Payer", img: "images2/tax_payer.png" },
+      { word: "Tax Payer", img: "images3/tax_payer.png" },
       { word: "Fairy", img: "images/fairy.png" },
       { word: "Bnuuy", img: "images/bnuuy.jpg" },
       { word: "Doll", img: "images/Hourai.png" },
@@ -304,7 +304,7 @@
       { word: "SuikaGyate", img: "images2/suigya.png" },
       { word: "Fisch", img: "images/fisch.png" },
       { word: "Stinky's alt", img: "images2/stinkyalt.png" },
-      { word: "thetensh", img: "images2/thetensh.png" },
+      { word: "thetensh", img: "images3/thetensh.png" },
       { word: "Sadnae", img: "images2/sadnae.png" },
       { word: "Lechonk", img: "images/lechonk.png" },
       { word: "Kana", img: "images/KANA.png" },
@@ -326,7 +326,7 @@
       { word: "Pat the Rumia", img: "images/patrumia.jpg" },
       { word: "ETOH", img: "images/ETOH.png" },
       { word: "Sagunaan", img: "images2/sagunaan.png"},
-      { word: "Tree", img: "images2/tree.png" },
+      { word: "Tree", img: "images3/tree.png" },
       { word: "Among us", img: "images/amogus.png" },
     ];
 
@@ -358,7 +358,7 @@
       { word: "Elly", img: "images/Elly.png"},
       { word: "Bite of 98", img: "images/biteof98.png"},
       { word: "Badapple 2", img: "images/badapple2.png"},
-      { word: "Youkai Kosuzu", img: "images2/yokaisuzu.png"},
+      { word: "Youkai Kosuzu", img: "images3/yokaisuzu.png"},
       { word: "EvilGuyXD", img: "images/evilguy.png"},
       { word: "Blonde Cheese", img: "images2/rumbia.png"},
       { word: "Spy Miraculous LB", img: "images/ladybugspy.png"},
@@ -384,9 +384,9 @@
       { word: "Parkour Master", img: "images/ParkourMaster.png"},
       { word: "Sparta Remix", img: "images2/sparta-remix-this-is-sparta.gif"},
       { word: "Total Global Yurification", img: "images/Global_Yurification.gif"},
-      { word: "Yuri Police", img: "images2/yuripolice.png"},
+      { word: "Yuri Police", img: "images3/yuripolice.png"},
       { word: "Anti-Yurist", img: "images/Anti_Yurists.gif"},
-      { word: "Yume", img: "images2/yume.gif"},
+      { word: "Yume", img: "images3/yume.gif"},
       { word: "Spider Roland", img: "images2/spiderroland.png"},
       { word: "Epic Letty Bday", img: "images/lettybday.png"},
       { word: "Dean", img: "images/kisume.png" },
@@ -398,8 +398,8 @@
       { word: "Touhou CotD", img: "images/cotd.jpg"},
       { word: "PM of the Week", img: "images2/pmweek.jpg"},
       { word: "ONE", img: "images/one.png"},
-      { word: "Elly Toyoapple", img: "images2/toyoapple.png"},
-      { word: "THIS IS GENSOKYO", img: "images2/thisisgensokyo.png"},
+      { word: "Elly Toyoapple", img: "images3/toyoapple.png"},
+      { word: "THIS IS GENSOKYO", img: "images3/thisisgensokyo.png"},
       { word: "Cheeseburger of destiny", img: "images/burger.png"},
       { word: "Rainbow Road Doubledash", img: "images2/rainbow.png"},
       { word: "Lunarian Invasion", img: "images/kkhta-lunarian.gif"},
@@ -408,11 +408,11 @@
       { word: "Birdawei", img: "images/birdawei.png" },
       { word: "Nekotina", img: "images/nekotina.png" },
       { word: "FightExe", img: "images/fightexe.png"},
-      { word: "Agnes Tachyon", img: "images2/uma-lowcortisol.gif"},
+      { word: "Agnes Tachyon", img: "images3/uma-lowcortisol.gif"},
     ];
 
     const exoticWords = [
-      { word: "Wheel Wizard", img: "images2/Wheel_Wizard.gif"},
+      { word: "Wheel Wizard", img: "images3/Wheel_Wizard.gif"},
       { word: "Refrigerator Wizard", img: "images2/Refrigerator_Wizard.gif"},
       { word: "Door Wizard", img: "images/Door_Wizard.gif"},
       { word: "Forgotten Rain Wizard", img: "images2/Rain_Wizards_Spell.gif"},
@@ -421,21 +421,21 @@
       { word: "Shield Wizard", img: "images/ShieldWizard.png"},
       { word: "Hidden Thumb HQ", img: "images/Hidden_Thumb_HQ.png"},
       { word: "GenYume Olympics", img: "images/olympic-flame-olympics.gif"},
-      { word: "Parkour God", img: "images2/Parkourgod.png"},
+      { word: "Parkour God", img: "images3/Parkourgod.png"},
       { word: "Polls", img: "images2/polls.png" },
     ];
 
     const apexWords = [
-      { word: "Thousands of Doors", img: "images2/thousandsofdoors.png"},
+      { word: "Thousands of Doors", img: "images3/thousandsofdoors.png"},
       { word: "British Sir Grodus", img: "images/briishsirgrodus.jpg"},
-      { word: "VR Chat", img: "images2/vrchat.png"},
-      { word: "Touhou Mother", img: "images2/touhoumother.png"},
+      { word: "VR Chat", img: "images3/vrchat.png"},
+      { word: "Touhou Mother", img: "images3/touhoumother.png"},
       { word: "Alice in Mario 64", img: "images/alicem64.png" },
     ];
 
     const secretWords = [
       { word: "Capital La Gensoland", img: "images/capgensoland.png"},
-      { word: "Two Hour War", img: "images2/Two_Hour_War.jpg"},
+      { word: "Two Hour War", img: "images3/Two_Hour_War.jpg"},
       { word: "GET READY!", img: "images/getready.png"},
       { word: "Elly's Many Wives", img: "images/manywives.png"},
     ];
