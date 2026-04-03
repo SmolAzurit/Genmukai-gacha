@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Genmukai Gacha</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: radial-gradient(circle at top, #2b2b55, #121222);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* FLOATING PARTICLES */
+    body::before {
+      content: "";
+      position: fixed;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(white 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.05;
+      animation: moveStars 60s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes moveStars {
+      from { transform: translateY(0); }
+      to { transform: translateY(-1000px); }
+    }
+
+    .side {
+      position: fixed;
+      top: 0;
+      height: 100%;
+      width: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      pointer-events: none;
+      opacity: 0.4;
+      z-index: 1;
+    }
+
+    .left { left: 0; }
+    .right { right: 0; }
+
+    .side img {
+      width: 80px;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      background: rgba(255,255,255,0.04);
+      padding: 30px;
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 40px rgba(0,0,0,0.7);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 5px;
+      text-shadow: 0 0 20px rgba(255,255,255,0.5);
+    }
+
+    h2 {
+      font-size: 1rem;
+      opacity: 0.7;
+      margin-bottom: 20px;
+    }
+
+    .probabilities {
+      margin-bottom: 20px;
+      font-size: 13px;
+      background: rgba(255,255,255,0.05);
+      padding: 10px 15px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .button {
+      background: linear-gradient(45deg, gold, orange);
+      color: black;
+      padding: 15px 35px;
+      font-size: 18px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 0 25px rgba(255,215,0,0.8);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* BUTTON SHINE */
+    .button::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.6), transparent);
+      transition: 0.5s;
+    }
+
+    .button:hover::after {
+      left: 100%;
+    }
+
+    .button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 40px gold;
+    }
+
+    .results {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      max-width: 520px;
+      padding: 10px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .card {
+      background: rgba(255,255,255,0.06);
+      padding: 12px;
+      border-radius: 12px;
+      text-align: center;
+      font-weight: bold;
+      transform: rotateY(90deg) scale(0.8);
+      animation: reveal 0.5s forwards;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      overflow: hidden; /* FIX glitch */
+    }
+
+    .card:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 25px rgba(255,255,255,0.2);
+    }
+
+    /* CARD SHINE */
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.15), transparent);
+      transform: skewX(-20deg);
+      pointer-events: none;
+    }
+
+    .card:hover::before {
+      animation: shine 0.6s forwards;
+    }
+
+    .card img {
+      width: 65px;
+      height: 65px;
+      object-fit: cover;
+      margin-bottom: 6px;
+      border-radius: 8px;
+    }
+
+    .spinning {
+      animation: spin 0.6s linear infinite;
+    }
+
+    .rare {
+      background: linear-gradient(270deg, rgb(95, 212, 248));
+      background-size: 400% 400%;
+      box-shadow: 0 0 20px rgb(95, 212, 248);
+      border: 1px solid rgb(95, 212, 248);
+    }
+
+    .epic {
+      background: linear-gradient(135deg, rgb(157, 20, 220), rgb(157, 20, 220));
+      box-shadow: 0 0 30px rgb(157, 20, 220);
+      transform: scale(1.1);
+      border: 1px solid rgb(157, 20, 220);
+    }
+
+    .legendary {
+      background:rgb(188, 197, 59);
+      color:rgb(253, 253, 253);
+      box-shadow: 0 0 20px rgb(188, 197, 59);
+    }
+
+    .uncommon {
+      background:rgb(25, 158, 43);
+      color:rgb(253, 253, 253);
+      box-shadow: 0 0 20px rgb(25, 158, 43);
+    }
+
+    .mythical {
+      background:rgb(182, 44, 34);
+      color:rgb(253, 253, 253);
+      box-shadow: 0 0 20px rgb(182, 44, 34);
+    }
+
+    .exotic {
+      background:rgb(223, 141, 34);
+      color:rgb(253, 253, 253);
+      box-shadow: 0 0 20px rgb(223, 141, 34);
+    }
+
+    .apex {
+      background:rgb(112, 18, 18);
+      color:rgb(253, 253, 253);
+      box-shadow: 0 0 20px rgb(112, 18, 18);
+    }
+
+    .secret {
+      background:rgb(161, 161, 151);
+      color:rgb(24, 22, 22);
+      box-shadow: 0 0 20px rgb(161, 161, 151);
+    }
+
+    .what {
+      background-image: url("images/rainbow-background.gif");
+      background-size: cover;
+      background-position: center;
+      color: white;
+     box-shadow: 0 0 15px rgb(255, 255, 255);
+    }
+
+    @keyframes reveal {
+      0% { transform: rotateY(90deg) scale(0.5); opacity: 0; }
+      100% { transform: rotateY(0deg) scale(1); opacity: 1; }
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes rainbow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+  <h1>Welcome to Genmukai Gacha !</h1>
+  <h2> Get the rarest roll in the server to get a special role! </h2>
+
+  <div class="probabilities">
+    Common: 55% | Uncommon: 30% | Rare: 7.35% | Epic: 4.45% | Legendary: 1.6% <br>
+    Mythical: 0.67% | Exotic: 0.6% | Apex: 0.18% | Secret: 0.1% | ???: 0.05%
+    </div>
+
+    <button class="button" onclick="pullTen()">✨ Pull x10</button>
+
+    <div class="results" id="results"></div>
+  </div>
+
+  <script>
+    const commonWords = [
+      { word: "Silly", img: "images/silly.png" },
+      { word: "Stinky", img: "images/stinky.jpg" },
+      { word: "Tax Payer", img: "images/tax_payer.png" },
+      { word: "Fairy", img: "images/fairy.png" },
+      { word: "Bnuuy", img: "images/bnuuy.jpg" },
+      { word: "Doll", img: "images/Hourai.png" },
+      { word: "Baka", img: "images/Baka.png" },
+      { word: "Eepy", img: "images/eepy.jpg" },
+      { word: "Fumo Friday", img: "images/fumo_friday.gif" },
+      { word: "Parkour Prison", img: "images/ParkourPrison.png" },
+      { word: "Kirby Elly", img: "images/kirbelly.png" },
+      { word: "Ellen Zaza", img: "images/ellenzaza.png" },
+      { word: "Running Skeleton", img: "images/skeleton-running.gif" },
+      { word: "Shield Skeleton", img: "images/shieldskeleton.gif" },
+      { word: "THE NETHER!", img: "images/nether.png" },
+      { word: "Ellen", img: "images/ELLEN.png"},
+      { word: "SuikaGyate", img: "images/suigya.png" },
+      { word: "Fisch", img: "images/fisch.png" },
+      { word: "Stinky's alt", img: "images/stinkyalt.png" },
+      { word: "thetensh", img: "images/thetensh.png" },
+      { word: "Sadnae", img: "images/sadnae.png" },
+      { word: "Lechonk", img: "images/lechonk.png" },
+      { word: "Kana", img: "images/KANA.png" },
+    ];
+
+    const uncommonWords = [
+      { word: "Skibidi Grandpa", img: "images/grandpa.png" },
+      { word: "Skibidi Crab", img: "images/skibidicrab.png"},
+      { word: "Skibidi Hydrate", img: "images/hydrate.gif" },
+      { word: "56", img: "images/56.png" },
+      { word: "FuwaFuwa Pudding", img: "images/puddin.png" },
+      { word: "Like a Dragon", img: "images/likeadrag.png" },
+      { word: "Skibidi Chen", img: "images/chen.png" },
+      { word: "Green and Mean", img: "images/greenandmean.png" },
+      { word: "Silliest", img: "images/silliest.gif" },
+      { word: "Juan", img: "images/juan.gif" },
+      { word: "Luigi Best Touhou Girl", img: "images/luigi.jpg" },
+      { word: "Archipelago", img: "images/archipelago.jpg" },
+      { word: "Pat the Rumia", img: "images/patrumia.jpg" },
+      { word: "ETOH", img: "images/ETOH.png" },
+      { word: "Sagunaan", img: "images/sagunaan.png"},
+      { word: "Tree", img: "images/tree.png" },
+      { word: "Among us", img: "images/amogus.png" },
+    ];
+
+    const rareWords = [
+      { word: "Cirno Fumo", img: "images/cirfumo.jpg" },
+      { word: "Arisu Fumo", img: "images/arisufumo.png" },
+      { word: "Koishi Fumo", img: "images/kooshfumo.jpg" },
+      { word: "Hexarchy", img: "images/hexarchy.png" },
+      { word: "Gabagool", img: "images/gabagool.gif"},
+      { word: "Genmukai Vtuber", img: "images/genmukaivtuber.png"},
+      { word: "Genmukai Minecraft", img: "images/genmucraft.png"},
+      { word: "Parkour Noob", img: "images/ParkourNoob.png"},
+      { word: "Huge Guy", img: "images/dolman.png"},
+      { word: "Baldguya", img: "images/kaguya-boom.gif"},
+      { word: "Backrooms Gunfight", img: "images/backgun.png"},
+      { word: "Letty Fatrock", img: "images/fatrock.jpg" },
+      { word: "Link is in Trouble", img: "images/linktrouble.png" },
+      { word: "PC98ification", img: "images/98ified.jpg" },
+      { word: "Freaky Link", img: "images/lonk.jpg" },
+      { word: "Haru Urara", img: "images/Haru_Urara.png" },
+      { word: "PC98 Alice", img: "images/pc98alice.jpg" },
+      { word: "HEROBRINE", img: "images/herobrine.jpg" },
+    ];
+
+    const epicWords = [
+      { word: "Koishi", img: "images/koishi.png" },
+      { word: "Alice", img: "images/arisu.png" },
+      { word: "Suika", img: "images/suik.png"},
+      { word: "Elly", img: "images/Elly.png"},
+      { word: "Bite of 98", img: "images/biteof98.png"},
+      { word: "Badapple 2", img: "images/badapple2.png"},
+      { word: "Youkai Kosuzu", img: "images/yokaisuzu.png"},
+      { word: "EvilGuyXD", img: "images/evilguy.png"},
+      { word: "Blonde Cheese", img: "images/rumbia.png"},
+      { word: "Spy Miraculous LB", img: "images/ladybugspy.png"},
+      { word: "Parkour Pro", img: "images/ParkourPro.png"},
+      { word: "7 Alices", img: "images/7alice.png"},
+      { word: "Elly's Crocodiles", img: "images/Crocy.gif"},
+      { word: "Helmbert", img: "images/helmbert.png"},
+      { word: "The Black Silence", img: "images/blacksilence.png"},
+      { word: "Kosuzufied", img: "images/kosuz.png"},
+      { word: "Holy Fazzballs", img: "images/freddy.jpg" },
+      { word: "Baldi's baisc", img: "images/baldi.png" },
+      { word: "Peter Griffin", img: "images/Peter_Griffin.png" },
+      { word: "Manhattan Cafe", img: "images/manhattan-cafe-uma-musume.gif" },
+    ];
+
+    const legendaryWords = [
+      { word: "Dante DevilMayCry", img: "images/dante.jpg"},
+      { word: "Yuri War One", img: "images/First_Yuri_War.gif"},
+      { word: "Yuri War Two", img: "images/Second_Yuri_War.gif"},
+      { word: "Archived Week", img: "images/archiveweek.png"},
+      { word: "Item Asylum-like", img: "images/item.png"},
+      { word: "Sol's RNG-like", img: "images/sols.png"},
+      { word: "Parkour Master", img: "images/ParkourMaster.png"},
+      { word: "Sparta Remix", img: "images/sparta-remix-this-is-sparta.gif"},
+      { word: "Total Global Yurification", img: "images/Global_Yurification.gif"},
+      { word: "Yuri Police", img: "images/yuripolice.png"},
+      { word: "Anti-Yurist", img: "images/Anti_Yurists.gif"},
+      { word: "Yume", img: "images/yume.gif"},
+      { word: "Spider Roland", img: "images/spiderroland.png"},
+      { word: "Epic Letty Bday", img: "images/lettybday.png"},
+      { word: "Dean", img: "images/kisume.png" },
+    ];
+
+    const mythicalWords = [
+      { word: "Bad Apple", img: "images/badapple.png"},
+      { word: "Mewification", img: "images/mewi.jpg"},
+      { word: "Touhou CotD", img: "images/cotd.jpg"},
+      { word: "PM of the Week", img: "images/pmweek.jpg"},
+      { word: "ONE", img: "images/one.png"},
+      { word: "Elly Toyoapple", img: "images/toyoapple.png"},
+      { word: "THIS IS GENSOKYO", img: "images/thisisgensokyo.png"},
+      { word: "Cheeseburger of destiny", img: "images/burger.png"},
+      { word: "Rainbow Road Doubledash", img: "images/rainbow.png"},
+      { word: "Lunarian Invasion", img: "images/kkhta-lunarian.gif"},
+      { word: "Usurper Sagume", img: "images/sag.png"},
+      { word: "Parkour Champion", img: "images/ParkourChampion.png"},
+      { word: "Birdawei", img: "images/birdawei.png" },
+      { word: "Nekotina", img: "images/nekotina.png" },
+      { word: "FightExe", img: "images/fightexe.png"},
+      { word: "Agnes Tachyon", img: "images/uma-lowcortisol.gif"},
+    ];
+
+    const exoticWords = [
+      { word: "Wheel Wizard", img: "images/Wheel_Wizard.gif"},
+      { word: "Refrigerator Wizard", img: "images/Refrigerator_Wizard.gif"},
+      { word: "Door Wizard", img: "images/Door_Wizard.gif"},
+      { word: "Forgotten Rain Wizard", img: "images/Rain_Wizards_Spell.gif"},
+      { word: "Evil Wheel Wizard", img: "images/evilwheel.png"},
+      { word: "Gabagool Wizard", img: "images/gabwizard.gif"},
+      { word: "Shield Wizard", img: "images/ShieldWizard.png"},
+      { word: "Hidden Thumb HQ", img: "images/Hidden_Thumb_HQ.png"},
+      { word: "GenYume Olympics", img: "images/olympic-flame-olympics.gif"},
+      { word: "Parkour God", img: "images/Parkourgod.png"},
+      { word: "Polls", img: "images/polls.png" },
+    ];
+
+    const apexWords = [
+      { word: "Thousands of Doors", img: "images/thousandsofdoors.png"},
+      { word: "British Sir Grodus", img: "images/briishsirgrodus.jpg"},
+      { word: "VR Chat", img: "images/vrchat.png"},
+      { word: "Touhou Mother", img: "images/touhoumother.png"},
+      { word: "Alice in Mario 64", img: "images/alicem64.png" },
+    ];
+
+    const secretWords = [
+      { word: "Capital La Gensoland", img: "images/capgensoland.png"},
+      { word: "Two Hour War", img: "images/Two_Hour_War.jpg"},
+      { word: "GET READY!", img: "images/getready.png"},
+      { word: "Elly's Many Wives", img: "images/manywives.png"},
+    ];
+
+    const whatWords = [
+      { word: "Genmukai GC", img: "images/genmukai.png"},
+      { word: "Pixelation!", img: "images/pixelation.gif"},
+    ];
+
+    function getRandomWord() {
+      const rand = Math.random();
+
+      if (rand < 0.55) {
+        return { ...commonWords[Math.floor(Math.random() * commonWords.length)], rarity: "common" }; 
+      } else if (rand < 0.85) {
+        return { ...uncommonWords[Math.floor(Math.random() * uncommonWords.length)], rarity: "uncommon" };
+      } else if (rand < 0.9235) {
+        return { ...rareWords[Math.floor(Math.random() * rareWords.length)], rarity: "rare" };
+      } else if (rand < 0.968) {
+        return { ...epicWords[Math.floor(Math.random() * epicWords.length)], rarity: "epic" };
+      } else if (rand < 0.984) {
+        return { ...legendaryWords[Math.floor(Math.random() * legendaryWords.length)], rarity: "legendary" };
+      } else if (rand < 0.9907) {
+        return { ...mythicalWords[Math.floor(Math.random() * mythicalWords.length)], rarity: "mythical" };
+      } else if (rand < 0.9967) {
+        return { ...exoticWords[Math.floor(Math.random() * exoticWords.length)], rarity: "exotic" };
+      }  else if (rand < 0.9985) {
+        return { ...apexWords[Math.floor(Math.random() * apexWords.length)], rarity: "apex" };
+      } else if (rand < 0.9995) {
+        return { ...secretWords[Math.floor(Math.random() * secretWords.length)], rarity: "secret" };
+      } else {
+        return { ...whatWords[Math.floor(Math.random() * whatWords.length)], rarity: "what" };
+      }
+      }
+
+    async function pullTen() {
+      const container = document.getElementById("results");
+      container.innerHTML = "";
+
+      let card = [];
+
+      for (let i = 0; i < 10; i++) {
+        const div = document.createElement("div");
+        div.classList.add("card", "spinning");
+        div.textContent = "?";
+        container.appendChild(div);
+        card.push(div);
+      }
+
+      for (let i = 0; i < 10; i++) {
+        await new Promise(r => setTimeout(r, 150));
+
+        const result = getRandomWord();
+        const div = card[i];
+
+        div.classList.remove("spinning");
+        div.classList.remove("rare", "epic", "legendary", "mythical", "secret", "uncommon", "apex", "exotric", "what");
+
+        if (result.rarity === "rare") div.classList.add("rare");
+        if (result.rarity === "epic") div.classList.add("epic");
+        if (result.rarity === "legendary") div.classList.add("legendary");
+        if (result.rarity === "uncommon") div.classList.add("uncommon");
+        if (result.rarity === "mythical") div.classList.add("mythical");
+        if (result.rarity === "exotic") div.classList.add("exotic");
+        if (result.rarity === "apex") div.classList.add("apex");
+        if (result.rarity === "secret") div.classList.add("secret");
+        if (result.rarity === "what") div.classList.add("what");
+
+         div.innerHTML = `<img src="${result.img}"><div>${result.word}</div>`;
+      }
+    }
+  </script>
+</body>
+</html>
